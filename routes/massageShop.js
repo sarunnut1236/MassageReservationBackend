@@ -9,38 +9,33 @@ const appointmentRouter = require("./appointments");
 // Import callback functions
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const {
-    getAllHospitals,
-    getSomeHospital,
-    createNewHospital,
-    updateHospital,
-    deleteHospital,
-    getVacCenters,
-} = require("../controllers/hospitals");
+    getAllMassageShops,
+    getSomeMassageShop,
+    createNewMassageShop,
+    updateMassageShop,
+    deleteMassageShop,
+} = require("../controllers/massageShop");
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
 // Re-route into other resource routers
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
-router.use("/:hospitalId/appointments", appointmentRouter);
-/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
-
-// /api/v1/hospitals/vacCenters
-router.route("/vacCenters").get(getVacCenters);
+router.use("/:id/appointments", appointmentRouter);
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
 // APIs
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
-// /api/v1/hospitals/
+// /api/v1/massage/
 router
     .route("/")
-    .get(getAllHospitals)
-    .post(protect, authorize("admin"), createNewHospital);
+    .get(getAllMassageShops)
+    .post(protect, authorize("admin"), createNewMassageShop);
 
-// /api/v1/hospitals/:id
+// /api/v1/MassageShops/:id
 router
     .route("/:id")
-    .get(getSomeHospital)
-    .put(protect, authorize("admin"), updateHospital)
-    .delete(protect, authorize("admin"), deleteHospital);
+    .get(getSomeMassageShop)
+    .put(protect, authorize("admin"), updateMassageShop)
+    .delete(protect, authorize("admin"), deleteMassageShop);
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 // Export router
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */

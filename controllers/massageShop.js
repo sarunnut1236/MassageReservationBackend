@@ -1,12 +1,11 @@
-let Hospital = require("../models/Hospital.js");
-const vacCenter = require('../models/VacCenter');
+let MassageShop = require("../models/MassageShop.js");
 
 /*
-@desc   GET all hospitals
-@route  GET /api/v1/hospitals
+@desc   GET all massageShops
+@route  GET /api/v1/massageShops
 @access public
 */
-exports.getAllHospitals = async (_request, response, next) => {
+exports.getAllMassageShops = async (_request, response, next) => {
     try {
         // deconstructt request query
         const requestQuery = { ..._request.query };
@@ -27,7 +26,7 @@ exports.getAllHospitals = async (_request, response, next) => {
         );
 
         // perform query
-        let query = Hospital.find(JSON.parse(queryString)).populate(
+        let query = MassageShop.find(JSON.parse(queryString)).populate(
             "appointments",
         );
 
@@ -51,12 +50,12 @@ exports.getAllHospitals = async (_request, response, next) => {
         const limit = parseInt(_request.query.limit, 10) || 25;
         const startIndex = (page - 1) * limit;
         const endIndex = page * limit;
-        const total = await Hospital.countDocuments();
+        const total = await MassageShop.countDocuments();
 
         query = query.skip(startIndex).limit(limit);
 
         // execute query
-        const hospitals = await query;
+        const massageShops = await query;
 
         // pagination result
         const pagination = {};
@@ -74,9 +73,9 @@ exports.getAllHospitals = async (_request, response, next) => {
         }
         response.status(200).json({
             succes: true,
-            count: hospitals.length,
+            count: massageShops.length,
             pagination,
-            data: hospitals,
+            data: massageShops,
         });
     } catch (error) {
         response.status(400).json({ success: false, data: error });
@@ -84,40 +83,40 @@ exports.getAllHospitals = async (_request, response, next) => {
 };
 
 /*
-@desc   GET single hospital
-@route  GET /api/v1/hospitals/:id
+@desc   GET single massageShop
+@route  GET /api/v1/massageShops/:id
 @access public
 */
-exports.getSomeHospital = async (_request, response, next) => {
+exports.getSomeMassageShop = async (_request, response, next) => {
     try {
-        const hospital = await Hospital.findById(_request.params.id);
+        const massageShop = await MassageShop.findById(_request.params.id);
 
-        if (!hospital) {
-            // If hospital is not found
+        if (!massageShop) {
+            // If massageShop is not found
             return response.status(400).json({
                 success: false,
-                data: `Hospital ${_request.params.id} not found`,
+                data: `MassageShop ${_request.params.id} not found`,
             });
         }
-        response.status(200).json({ succes: true, data: hospital });
+        response.status(200).json({ succes: true, data: massageShop });
     } catch (error) {
         response.status(400).json({ success: false, data: error });
     }
 };
 
 /*
-@desc   POST new hospital
-@route  POST /api/v1/hospitals
+@desc   POST new massageShop
+@route  POST /api/v1/massageShops
 @access private
 */
-exports.createNewHospital = async (_request, response, next) => {
+exports.createNewMassageShop = async (_request, response, next) => {
     let status = 400;
     let success = false;
     let data = "There is an error. Please try again.";
 
     try {
-        const hospital = await Hospital.create(_request.body);
-        [status, success, data] = [201, true, hospital];
+        const massageShop = await MassageShop.create(_request.body);
+        [status, success, data] = [201, true, massageShop];
     } catch (error) {
         data = error;
     } finally {
@@ -126,13 +125,13 @@ exports.createNewHospital = async (_request, response, next) => {
 };
 
 /*
-@desc   PUT update hospital
-@route  PUT /api/v1/hospitals/:id
+@desc   PUT update massageShop
+@route  PUT /api/v1/massageShops/:id
 @access private
 */
-exports.updateHospital = async (_request, response, next) => {
+exports.updateMassageShop = async (_request, response, next) => {
     try {
-        const hospital = await Hospital.findByIdAndUpdate(
+        const massageShop = await MassageShop.findByIdAndUpdate(
             _request.params.id,
             _request.body,
             {
@@ -141,54 +140,40 @@ exports.updateHospital = async (_request, response, next) => {
             },
         );
 
-        if (!hospital) {
-            // If hospital is not found
+        if (!massageShop) {
+            // If massageShop is not found
             return response.status(400).json({
                 success: false,
-                data: `Hospital ${_request.params.id} not found`,
+                data: `MassageShop ${_request.params.id} not found`,
             });
         }
-        response.status(200).json({ success: true, data: hospital });
+        response.status(200).json({ success: true, data: massageShop });
     } catch (error) {
         response.status(400).json({ success: false, data: error });
     }
 };
 
 /*
-@desc   DELETE hospital
-@route  DELETE /api/v1/hospitals/:id
+@desc   DELETE massageShop
+@route  DELETE /api/v1/massageShops/:id
 @access private
 */
-exports.deleteHospital = async (_request, response, next) => {
+exports.deleteMassageShop = async (_request, response, next) => {
     try {
-        const hospital = await Hospital.findById(_request.params.id);
+        const massageShop = await MassageShop.findById(_request.params.id);
 
-        if (!hospital) {
-            // If hospital is not found
+        if (!massageShop) {
+            // If massageShop is not found
             return response.status(404).json({
                 success: false,
-                data: `Hospital ${_request.params.id} not found`,
+                data: `MassageShop ${_request.params.id} not found`,
             });
         }
 
-        hospital.deleteOne();
-        response.status(200).json({ success: true, data: hospital });
+        massageShop.deleteOne();
+        response.status(200).json({ success: true, data: massageShop });
     } catch (error) {
         console.error(error);
         response.status(400).json({ success: false, data: error });
     }
 };
-
-exports.getVacCenters = (_request, response, next) => {
-    vacCenter.getAll((error, data) => {
-        if (error) {
-            console.error(error);
-            response.status(500).send({
-                message: error.message || "Some error occurred while retrieving Vaccine Centers.",
-            });
-        } else {
-            console.log(data);
-            response.status(200).send({data});
-        }
-    })
-}

@@ -1,17 +1,33 @@
+// Imports
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const express = require("express");
+const { protect, authorize } = require("../middleware/auth");
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
+// Importing the functions from the controllers
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const {
     getAppointments,
     getAppointment,
     addAppointment,
-    upDateAppointment,
+    updateAppointment,
     deleteAppointment,
 } = require("../controllers/appointments");
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
+// Router
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const router = express.Router({ mergeParams: true });
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
-const { protect, authorize } = require("../middleware/auth");
 
+
+// API Routes
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 router
     .route("/")
     .get(protect, getAppointments)
@@ -19,7 +35,13 @@ router
 router
     .route("/:id")
     .get(protect, getAppointment)
-    .put(protect, authorize("admin", "user"), upDateAppointment)
+    .put(protect, authorize("admin", "user"), updateAppointment)
     .delete(protect, authorize("admin", "user"), deleteAppointment);
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
+// Exporting the router
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 module.exports = router;
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */

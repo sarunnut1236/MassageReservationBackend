@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/Users");
+const Blacklist = require("../models/Blacklist")
 
 // Protect routes
 exports.protect = async (_request, response, next) => {
@@ -19,11 +20,14 @@ exports.protect = async (_request, response, next) => {
             message: "Not authorized to access this route",
         });
     }
-
     try {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         console.log(decoded);
+        const checkIfBlacklisted = await Blacklist.findOne({ token: token });
+        if (checkIfBlacklisted) {
+            return response.status(401).json({ success: false, message: "This session has expired, please login" });
+        }
         _request.user = await User.findById(decoded.id);
         next();
     } catch (error) {

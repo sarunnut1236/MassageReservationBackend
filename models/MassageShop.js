@@ -33,11 +33,11 @@ const MassageShop = {
         required: [true, "Please add a region"],
     },
     openTime:{
-        type: Date,
+        type: Date, // we will extract only time from this, ignore date
         required: [true, "Please add an open time"],
     },
     closeTime:{
-        type: Date,
+        type: Date, // we will extract only time from this, ignore date
         required: [true, "Please add a close time"],
     },
 };

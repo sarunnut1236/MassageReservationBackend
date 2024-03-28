@@ -1,6 +1,13 @@
+// Imports
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const Appointment = require("../models/Appointment");
-const Hospital = require("../models/MassageShop");
+const MassageShop = require("../models/MassageShop");
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
+// API Routes
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 // desc    Get all appointments
 // route   GET /api/v1/appointments
 // access  Private
@@ -10,14 +17,14 @@ exports.getAppointments = async (_request, response, next) => {
     // general users can see only their appointments
     if (_request.user.rolse !== "admin") {
         query = Appointment.find({ user: _request.user.id }).populate({
-            path: "hospital",
+            path: "massageShop",
             select: "name province tel",
         });
     }
     // admin can see all appointments
     else {
         query = Appointment.find().populate({
-            path: "hospital",
+            path: "massageShop",
             select: "name province tel",
         });
     }
@@ -50,7 +57,7 @@ exports.getAppointment = async (_request, response, next) => {
         const appointment = await Appointment.findById(
             _request.params.id,
         ).populate({
-            path: "hospital",
+            path: "massageShop",
             select: "name description tel",
         });
 
@@ -76,18 +83,18 @@ exports.getAppointment = async (_request, response, next) => {
 };
 
 // desc    Add appointment
-// route   POST /api/v1/hospitals/:hospitalId/appointments
+// route   POST /api/v1/massageShops/:massageShopId/appointments
 // access  Private
 exports.addAppointment = async (_request, response, next) => {
     try {
-        _request.body.hospital = _request.params.hospitalId;
+        _request.body.massageShop = _request.params.id;
 
-        const hospital = await Hospital.findById(_request.params.hospitalId);
+        const massageShop = await MassageShop.findById(_request.params.id);
 
-        if (!hospital) {
+        if (!massageShop) {
             return response.status(404).json({
                 success: false,
-                message: `No hospital with the id of ${_request.params.hospitalId}`,
+                message: `No massageShop with the id of ${_request.params.id}`,
             });
         }
 
@@ -122,7 +129,7 @@ exports.addAppointment = async (_request, response, next) => {
 // desc    Delete appointment
 // route   DELETE /api/v1/appointments/:id
 // access  Private
-exports.upDateAppointment = async (_request, response, next) => {
+exports.updateAppointment = async (_request, response, next) => {
     try {
         let appointment = await Appointment.findById(_request.params.id);
 
@@ -201,3 +208,4 @@ exports.deleteAppointment = async (_request, response, next) => {
         });
     }
 };
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */

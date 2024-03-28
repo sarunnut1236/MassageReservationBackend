@@ -7,6 +7,7 @@ const massageShop = require("./routes/massageShop");
 const auth = require("./routes/auth");
 const appointments = require("./routes/appointments");
 const connectDB = require("./config/db");
+const cors = require("cors");
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
 
@@ -31,6 +32,7 @@ const app = express();
 // Body parser
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 app.use("/api/v1/massage", massageShop);
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/appointments", appointments);

@@ -1,6 +1,7 @@
 // Import schema
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const User = require("../models/Users");
+const Blacklist = require("../models/Blacklist");
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
 
@@ -74,6 +75,34 @@ exports.getMe = async (_request, response, next) => {
 // @access  Private
 exports.logout = async (_request, response, next) => {
     // todo: implement logout
+    try {
+        const authHeader = _request.headers['cookie'];
+        if (!authHeader) {
+            return response.status(204).json({ success: false, message: "No content" });
+        }
+        const cookie = authHeader.split('=')[1];
+        const accessToken = cookie.split(';')[0];
+        const checkIfBlacklisted = await Blacklist.findOne({token: accessToken});
+        if(checkIfBlacklisted)
+        {
+            return response.status(204).json({ success: false, message: "No content" });
+        }
+        const newBlackList = new Blacklist({
+            token: accessToken,
+        });
+        await newBlackList.save();
+        response.setHeader('Clear-Site_Data', '"cookies"');
+        response.status(200).json({success: true, message: "You are logged out"})
+    }
+    catch (error)
+    {
+        console.error(error);
+        response.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        })
+        response.end();
+    }
 };
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 

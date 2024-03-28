@@ -1,5 +1,12 @@
+// Import massageshop
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 let MassageShop = require("../models/MassageShop.js");
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
+// APIs
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 /*
 @desc   GET all massageShops
 @route  GET /api/v1/massageShops
@@ -170,10 +177,11 @@ exports.deleteMassageShop = async (_request, response, next) => {
             });
         }
 
-        massageShop.deleteOne();
-        response.status(200).json({ success: true, data: massageShop });
+        const deleted = await MassageShop.findByIdAndDelete(_request.params.id);
+        response.status(200).json({ success: true, data: deleted });
     } catch (error) {
         console.error(error);
         response.status(400).json({ success: false, data: error });
     }
 };
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */

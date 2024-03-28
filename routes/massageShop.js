@@ -6,6 +6,8 @@ const { protect, authorize } = require("../middleware/auth");
 const appointmentRouter = require("./appointments");
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
 // Import callback functions
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const {
@@ -17,10 +19,14 @@ const {
 } = require("../controllers/massageShop");
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
 // Re-route into other resource routers
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 router.use("/:id/appointments", appointmentRouter);
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
+
+
 
 // APIs
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
@@ -37,6 +43,9 @@ router
     .put(protect, authorize("admin"), updateMassageShop)
     .delete(protect, authorize("admin"), deleteMassageShop);
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
+
+
+
 // Export router
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 module.exports = router;

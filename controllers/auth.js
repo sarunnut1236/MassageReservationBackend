@@ -1,27 +1,31 @@
+// Import schema
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const User = require("../models/Users");
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
+
+
+// API callbacks
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 // @desc    Register user
 // @route   POST /api/v1/auth/register
 // @access  Public
-
 exports.register = async (_request, response, next) => {
     try {
-        const { name, email, password, role } = _request.body;
+        const { name, tel, email, password, role } = _request.body;
 
         // Create user
         const user = await User.create({
             name,
+            tel,
             email,
             password,
             role,
         });
-
-        // const token = user.getSignedJwtToken();
-        // response.status(200).json({success: true, token});
         sendTokenResponse(user, 200, response);
     } catch (error) {
         response.status(400).json({ success: false });
-        console.log(error.stack);
+        console.error(error.stack);
     }
 };
 
@@ -51,12 +55,32 @@ exports.login = async (_request, response, next) => {
             .status(401)
             .json({ success: false, message: "Invalid credentials" });
     }
-    // Create token
-    // const token = user.getSignedJwtToken();
-    // response.status(200).json({success: true, token});
     sendTokenResponse(user, 200, response);
 };
 
+// @desc    Get current logged in user
+// @route   POST /api/v1/auth/me
+// @access  Private
+exports.getMe = async (_request, response, next) => {
+    const user = await User.findById(_request.user.id);
+    response.status(200).json({
+        success: true,
+        data: user,
+    });
+};
+
+// @desc    Log user out / clear cookie
+// @route   GET /api/v1/auth/logout
+// @access  Private
+exports.logout = async (_request, response, next) => {
+    // todo: implement logout
+};
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
+
+
+
+// Helper functions
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const sendTokenResponse = (user, statusCode, response) => {
     // Create token
     const token = user.getSignedJwtToken();
@@ -74,14 +98,4 @@ const sendTokenResponse = (user, statusCode, response) => {
         token,
     });
 };
-
-// @desc    Get current logged in user
-// @route   POST /api/v1/auth/me
-// @access  Private
-exports.getMe = async (_request, response, next) => {
-    const user = await User.findById(_request.user.id);
-    response.status(200).json({
-        success: true,
-        data: user,
-    });
-};
+/* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */

@@ -15,7 +15,7 @@ exports.getAppointments = async (_request, response, next) => {
     let query;
 
     // general users can see only their appointments
-    if (_request.user.rolse !== "admin") {
+    if (_request.user.role !== "admin") {
         query = Appointment.find({ user: _request.user.id }).populate({
             path: "massageShop",
             select: "name province tel",

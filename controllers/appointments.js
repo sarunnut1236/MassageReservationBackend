@@ -2,6 +2,7 @@
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 const Appointment = require("../models/Appointment");
 const MassageShop = require("../models/MassageShop");
+const sendEmail = require("../services/sendEmail");
 /* -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-* */
 
 
@@ -112,6 +113,14 @@ exports.addAppointment = async (_request, response, next) => {
         }
 
         const appointment = await Appointment.create(_request.body);
+
+        // construct an email
+        const appointmentDateTime = appointment.apptDate.toDateString();
+        const emailSubject = "You have successfully made a message reservation";
+        const emailContent = `You have successfully made a message reservation for ${massageShop.name} at ${appointmentDateTime}`;
+
+        // send the email to the user
+        sendEmail(_request.user.id, emailSubject, emailContent);
 
         response.status(200).json({
             success: true,

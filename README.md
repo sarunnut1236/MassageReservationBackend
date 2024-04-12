@@ -59,3 +59,12 @@ confidential.
     </li>
   </ol>
 </ol>
+
+## Class Diagram
+The project consists of 3 main routes
+<ol>
+  <li>Authentication System</li>
+  <li>Massage Shop System</li>
+  <li>Reservation System</li>
+</ol>
+![Class Diagram](https://github.com/sarunnut1236/SwDevPracBackendProject/blob/main/diagrams/ClassDiagram.png)

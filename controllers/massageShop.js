@@ -79,7 +79,7 @@ exports.getAllMassageShops = async (_request, response, next) => {
             };
         }
         response.status(200).json({
-            succes: true,
+            success: true,
             count: massageShops.length,
             pagination,
             data: massageShops,
@@ -105,7 +105,7 @@ exports.getSomeMassageShop = async (_request, response, next) => {
                 data: `MassageShop ${_request.params.id} not found`,
             });
         }
-        response.status(200).json({ succes: true, data: massageShop });
+        response.status(200).json({ success: true, data: massageShop });
     } catch (error) {
         response.status(400).json({ success: false, data: error });
     }

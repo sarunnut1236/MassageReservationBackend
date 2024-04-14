@@ -1,0 +1,1081 @@
+{
+	"info": {
+		"_postman_id": "f6ec0c07-338d-4652-8b6c-333a42fb553f",
+		"name": "MassageShopTest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32536246"
+	},
+	"item": [
+		{
+			"name": "User Test",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"const request_json_body = JSON.parse(request.data);",
+									"",
+									"pm.environment.set(\"email\", request_json_body.email);",
+									"pm.environment.set(\"password\", request_json_body.password);",
+									"",
+									"postman.setNextRequest(\"Login\");",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"tel\": \"0887776655\",\r\n    \"password\": \"{{$randomPassword}}\",\r\n    \"role\": \"user\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Get All Massage Shop\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//     \"email\": \"admin@admin.com\",\r\n//     \"password\": \"root1234!\"\r\n// }\r\n\r\n// {\r\n//     \"email\" : \"a@a.com\",\r\n//     \"password\" : \"root1234\"\r\n// }\r\n\r\n// {\r\n//     \"email\" : \"supachokang@gmail.com\",\r\n//     \"password\" : \"root1234\"\r\n// }\r\n\r\n{\r\n    \"email\" : \"{{email}}\",\r\n    \"password\" : \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Massage Shop",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Have some shops\", function () {",
+									"    pm.expect(response_json_body.count).to.be.above(0);",
+									"    pm.expect(response_json_body.data.length).to.be.above(0);",
+									"});",
+									"",
+									"pm.environment.set(\"shop_ID\", response_json_body.data[0].id);",
+									"",
+									"postman.setNextRequest(\"Get Single Massage Shop\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/massage?",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massage"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
+							]
+						},
+						"description": "Fetch all hospitals from database"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Massage Shop",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Add One Appointment Valid\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/massage/:shop_ID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massage",
+								":shop_ID"
+							],
+							"variable": [
+								{
+									"key": "shop_ID",
+									"value": "{{shop_ID}}"
+								}
+							]
+						},
+						"description": "Fetch a single hospitals from database."
+					},
+					"response": []
+				},
+				{
+					"name": "Add One Appointment Valid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"// console.log(\"Apt ID\", response_json_body.data._id);",
+									"",
+									"pm.environment.set(\"appointment_ID\", response_json_body.data._id);",
+									"",
+									"postman.setNextRequest(\"Add One Appointment Invalid\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"apptDate\": \"2021-10-02T17:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/massage/:shop_ID/appointments",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massage",
+								":shop_ID",
+								"appointments"
+							],
+							"variable": [
+								{
+									"key": "shop_ID",
+									"value": "{{shop_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add One Appointment Invalid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500. Because of Invalid appointment.\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Unsuccessful response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.false;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Get All Appointments\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"apptDate\": \"2021-10-02T17:00:00.000Z\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/massage/1234/appointments",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"massage",
+								"1234",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Appointments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Have some appointments\", function () {",
+									"    pm.expect(response_json_body.count).to.be.above(0);",
+									"    pm.expect(response_json_body.data.length).to.be.above(0);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Get One Appointment\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Update One Appointment\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments/:appointment_ID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								":appointment_ID"
+							],
+							"variable": [
+								{
+									"key": "appointment_ID",
+									"value": "{{appointment_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update One Appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Delete Appointment\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"apptDate\": \"2021-11-11T17:00:00.000+00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments/:appointment_ID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								":appointment_ID"
+							],
+							"variable": [
+								{
+									"key": "appointment_ID",
+									"value": "{{appointment_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments/:appointment_ID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								":appointment_ID"
+							],
+							"variable": [
+								{
+									"key": "appointment_ID",
+									"value": "{{appointment_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(null);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZDM2MTZjYjdmNjViZjIwZGZjNDI5OCIsImlhdCI6MTcwODM1NjExOCwiZXhwIjoxNzEwOTQ4MTE4fQ.baSijxoGcxdfl_3etGpQigFp-SBiGPLk68BSYUPFTno",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin Test",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"const request_json_body = JSON.parse(request.data);",
+									"",
+									"pm.environment.set(\"email\", request_json_body.email);",
+									"pm.environment.set(\"password\", request_json_body.password);",
+									"",
+									"postman.setNextRequest(\"Login\");",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Test Admin\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"tel\": \"0887776655\",\r\n    \"password\": \"{{$randomPassword}}\",\r\n    \"role\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/register",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"TOKEN\", pm.response.json().token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Get All Appointments\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//     \"email\": \"admin@admin.com\",\r\n//     \"password\": \"root1234!\"\r\n// }\r\n\r\n// {\r\n//     \"email\" : \"a@a.com\",\r\n//     \"password\" : \"root1234\"\r\n// }\r\n\r\n// {\r\n//     \"email\" : \"supachokang@gmail.com\",\r\n//     \"password\" : \"root1234\"\r\n// }\r\n\r\n{\r\n    \"email\" : \"{{email}}\",\r\n    \"password\" : \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Appointments",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"More than three appointments\", function () {",
+									"    pm.expect(response_json_body.count).to.be.above(3);",
+									"    pm.expect(response_json_body.data.length).to.be.above(3);",
+									"});",
+									"",
+									"const appointment_ID = response_json_body.data[0]._id;",
+									"",
+									"pm.environment.set(\"appointment_ID\", appointment_ID);",
+									"",
+									"postman.setNextRequest(\"Update One Appointment\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update One Appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(\"Delete Appointment\");"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"apptDate\": \"2021-11-11T17:00:00.000+00:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments/:appointment_ID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								":appointment_ID"
+							],
+							"variable": [
+								{
+									"key": "appointment_ID",
+									"value": "{{appointment_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Appointment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const response_json_body = pm.response.json();",
+									"",
+									"pm.test(\"Success response\", function () {",
+									"    pm.expect(response_json_body).to.have.property('success');",
+									"    pm.expect(response_json_body.success).to.be.true;",
+									"});",
+									"",
+									"postman.setNextRequest(null);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": "JSON Type",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/api/v1/appointments/:appointment_ID",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"appointments",
+								":appointment_ID"
+							],
+							"variable": [
+								{
+									"key": "appointment_ID",
+									"value": "{{appointment_ID}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}

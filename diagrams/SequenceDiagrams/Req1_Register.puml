@@ -1,0 +1,22 @@
+@startuml User Register (POST)
+
+footer Page %page% of %lastpage%
+title "User Register (POST)"
+
+participant "User" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:auth" as routerAuth
+participant "<<controllers>>\n:auth" as controllerAuth
+participant "<<model>>\n:User" as modelHospital
+database "<<MongoDB>>\n:users" as UserDatabase
+
+client->server ++:req.post('/api/v1/auth/register')
+server->routerAuth ++:app.use("/api/v1/auth", auth)
+routerAuth -> controllerAuth ++:register()
+controllerAuth->modelHospital ++:create(req.body)
+modelHospital ->UserDatabase ++: UserSchema
+UserDatabase --> modelHospital --: user
+controllerAuth <-- modelHospital --:user
+controllerAuth->client --:response
+
+@enduml

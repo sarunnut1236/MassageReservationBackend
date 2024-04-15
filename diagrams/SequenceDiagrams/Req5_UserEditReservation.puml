@@ -1,0 +1,25 @@
+@startuml Edit Reservations (PUT)
+
+footer Page %page% of %lastpage%
+title "Edit Reservations (PUT)"
+
+participant "User" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<middleware>>\n:auth" as middlewareAuth
+participant "<<controllers>>\n:appointments" as controllerAppointments
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:appointments" as AppointmentDatabase
+
+client->server ++:req.put('/api/v1/appointments/:id')
+server->routerAppointments ++:app.use("/api/v1/appointments", appointments)
+routerAppointments -> middlewareAuth ++: protect()
+middlewareAuth -> middlewareAuth :authorize("admin", "user")()
+middlewareAuth -> controllerAppointments ++:updateAppointment()
+controllerAppointments->modelAppointment ++:findByIdAndUpdate(req.params.id, req.body)
+modelAppointment ->AppointmentDatabase ++: AppointmentSchema
+AppointmentDatabase --> modelAppointment --: Appointment
+controllerAppointments <-- modelAppointment --:Appointment
+controllerAppointments->client --:response
+
+@enduml

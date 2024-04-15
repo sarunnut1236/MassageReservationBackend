@@ -1,0 +1,27 @@
+@startuml Make Reservation (POST)
+
+footer Page %page% of %lastpage%
+title "Make Reservation (POST)"
+
+participant "User" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:massageShop" as routerMassageShop
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<middleware>>\n:auth" as middlewareAuth
+participant "<<controllers>>\n:appointments" as controllerAppointment
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:appointments" as AppointmentDatabase
+
+client->server ++:req.post('/api/v1/massageShops/:id/appointments')
+server->routerMassageShop ++:app.use("/api/v1/massage", massageShop)
+routerMassageShop->routerAppointments ++:app.use("/:id/appointments", appointments)
+routerAppointments -> middlewareAuth ++:protect()
+middlewareAuth -> middlewareAuth :authorize("admin", "user")()
+middlewareAuth -> controllerAppointment ++:addAppointment()
+controllerAppointment->modelAppointment ++:create(req.body)
+modelAppointment ->AppointmentDatabase ++: AppointmentSchema
+AppointmentDatabase --> modelAppointment --: Appointment
+controllerAppointment <-- modelAppointment --:Appointment
+controllerAppointment->client --:response
+
+@enduml

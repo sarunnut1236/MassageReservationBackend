@@ -1,0 +1,24 @@
+@startuml Get All Reservations (GET)
+
+footer Page %page% of %lastpage%
+title "Get All Reservations (GET)"
+
+participant "User" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:appointments" as routerAppointments
+participant "<<middleware>>\n:auth" as middlewareAuth
+participant "<<controllers>>\n:appointments" as controllerAppointments
+participant "<<model>>\n:Appointment" as modelAppointment
+database "<<MongoDB>>\n:appointments" as AppointmentDatabase
+
+client->server ++:req.get('/api/v1/appointments')
+server->routerAppointments ++:app.use("/api/v1/appointments", appointments)
+routerAppointments -> middlewareAuth ++: protect()
+middlewareAuth -> controllerAppointments ++:getAppointments()
+controllerAppointments->modelAppointment ++:find({ user: req.user.id })
+modelAppointment ->AppointmentDatabase ++: AppointmentSchema
+AppointmentDatabase --> modelAppointment --: Appointments
+controllerAppointments <-- modelAppointment --:Appointments
+controllerAppointments->client --:response
+
+@enduml

@@ -1,0 +1,22 @@
+@startuml Get All Massage Shop (GET)
+
+footer Page %page% of %lastpage%
+title "Get All Massage Shop (GET)"
+
+participant "User" as client
+participant "<<javaScript>>\n:server" as server
+participant "<<router>>\n:massageShop" as routerMassageShop
+participant "<<controllers>>\n:massageShop" as controllerMassageShop
+participant "<<model>>\n:MassageShop" as modelMassageShop
+database "<<MongoDB>>\n:users" as UserDatabase
+
+client->server ++:req.post('/api/v1/massage')
+server->routerMassageShop ++:app.use("/api/v1/massage", massageShop)
+routerMassageShop -> controllerMassageShop ++:getAllMassageShops()
+controllerMassageShop->modelMassageShop ++:find()
+modelMassageShop ->UserDatabase ++: MassageShopSchema
+UserDatabase --> modelMassageShop --: MassageShops
+controllerMassageShop <-- modelMassageShop --:MassageShops
+controllerMassageShop->client --:response
+
+@enduml
